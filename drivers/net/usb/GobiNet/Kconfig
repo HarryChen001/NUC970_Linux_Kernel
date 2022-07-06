@@ -1,0 +1,6 @@
+config USB_NET_GOBINET
+    tristate "support quectel Gobinet Driver"
+    depends on USB_USBNET
+    help
+        it is a driver to support QUECTEL(EC20&&EC200...) Gobinet
+
