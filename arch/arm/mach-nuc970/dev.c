@@ -433,7 +433,48 @@ static struct nuc970fb_display nuc970fb_lcd_info[] = {
 		.scale		= 0x04000400,
 	},
 #endif
+
+//Added by harry 20230720
+#ifdef CONFIG_QT070TFT_1024X600
+	/* FW070TFT 800x480 TFT Panel , 24bits*/
+	[0] = {
+#ifdef CONFIG_FB_SRCFMT_RGB888
+		.type           = LCM_DCCS_VA_SRC_RGB888,
+		.bpp            = 32,
+#elif defined(CONFIG_FB_SRCFMT_RGB565)
+		.type           = LCM_DCCS_VA_SRC_RGB565,
+		.bpp            = 16,
+#endif
+		.width          = 1024,
+		.height         = 600,
+		.xres           = 1024,
+		.yres           = 600,
+		.pixclock       = 32000000,
+		.left_margin    = 40,
+		.right_margin   = 196,
+		.hsync_len              = 20,
+		.upper_margin   = 23,
+		.lower_margin   = 19,
+		.vsync_len              = 3,
+#ifdef CONFIG_FB_SRCFMT_RGB888
+		.dccs           = 0x0e00020a,
+		.fbctrl         = 0x04000400,
+#elif defined(CONFIG_FB_SRCFMT_RGB565)
+		.dccs           = 0x0e00040a,
+		.fbctrl         = 0x01900190,
+#endif
+#ifdef CONFIG_FB_LCD_16BIT_PIN
+		.devctl         = 0x050000c0,
+#elif defined(CONFIG_FB_LCD_18BIT_PIN)
+		.devctl         = 0x060000c0,
+#elif defined(CONFIG_FB_LCD_24BIT_PIN)
+		.devctl         = 0x070000c0,
+#endif
+		.scale          = 0x04000400,
+	},
+#endif
 };
+//end add
 
 static struct nuc970fb_mach_info nuc970fb_fb_info = {
 	.displays		= &nuc970fb_lcd_info[0],
@@ -815,6 +856,14 @@ struct platform_device nuc970_device_i2c0 = {
 #endif
 #if defined(CONFIG_I2C_BUS_NUC970_P1) || defined(CONFIG_I2C_BUS_NUC970_P1_MODULE)
 //port 1
+static struct i2c_board_info __initdata nuc970_i2c_clients1[] =
+{
+//Added by harry 20230720
+#ifdef CONFIG_TOUCHSCREEN_GT911
+	{I2C_BOARD_INFO("Goodix-911", 0x58),},
+#endif
+//end add
+};
 static struct nuc970_platform_i2c nuc970_i2c1_data = {
 	.bus_num = 1,
 	.bus_freq = 100000,
@@ -1746,6 +1795,12 @@ void __init nuc970_platform_init(struct platform_device **device, int size)
 #if defined(CONFIG_I2C_BUS_NUC970_P0) || defined(CONFIG_I2C_BUS_NUC970_P0_MODULE)
 	i2c_register_board_info(0, nuc970_i2c_clients0, sizeof(nuc970_i2c_clients0)/sizeof(struct i2c_board_info));
 #endif
+
+//Added by Harry 20230720
+#if defined(CONFIG_I2C_BUS_NUC970_P1) || defined(CONFIG_I2C_BUS_NUC970_P1_MODULE)
+        i2c_register_board_info(0, nuc970_i2c_clients1, sizeof(nuc970_i2c_clients1)/sizeof(struct i2c_board_info));
+#endif
+//end add
 
 #if defined(CONFIG_GPIO_NUC970) || defined(CONFIG_GPIO_NUC970_MODULE)
 #if defined(CONFIG_I2C_ALGOBIT) || defined(CONFIG_I2C_ALGOBIT_MODULE)

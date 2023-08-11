@@ -2126,6 +2126,11 @@ choice
         bool "AUO A025DL02 320x240 Color TFT LCD"
         depends on FB_NUC970
         select FB_NUC970_18BIT_PIN
+	
+	config QT070TFT_1024X600
+        bool "QT070TFT 1024X600 10-Inch Color TFT LCD"
+        depends on FB_NUC970
+        select FB_NUC970_24BIT_PIN
 
 	config E50A2V1_800X480
         bool "E50A2V1 800x480 5-Inch Color TFT LCD"
